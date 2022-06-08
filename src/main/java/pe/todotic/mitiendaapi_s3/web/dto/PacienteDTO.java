@@ -35,6 +35,10 @@ public class PacienteDTO {
     private  String descripcion;
 
 
+    private Float precio;
+
+    private String tutor;
+
 
 
 }

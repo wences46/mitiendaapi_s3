@@ -30,7 +30,6 @@ public class AssetController {
         return result;
     }
 
-
     @GetMapping("/{filename}")
     ResponseEntity<Resource> loadFile(@PathVariable String filename) throws IOException {
         Resource resource = fileSystemStorageService.loadAsResource(filename);

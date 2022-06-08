@@ -1,11 +1,11 @@
 package pe.todotic.mitiendaapi_s3.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+
 
 @Data
 @Entity
@@ -36,6 +36,11 @@ public class Paciente {
     private String rutaPortada;
 
     private String descripcion;
+
+    private Float precio;
+
+    private  String tutor;
+
 
 
 

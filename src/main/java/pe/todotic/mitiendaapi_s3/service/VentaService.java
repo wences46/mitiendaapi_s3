@@ -1,4 +1,3 @@
-
 package pe.todotic.mitiendaapi_s3.service;
 
 import com.paypal.core.PayPalHttpClient;
@@ -7,111 +6,100 @@ import com.paypal.http.exceptions.HttpException;
 import com.paypal.orders.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pe.todotic.mitiendaapi_s3.model.Grupo;
-import pe.todotic.mitiendaapi_s3.model.ItemGrupo;
-import pe.todotic.mitiendaapi_s3.model.Paciente;
-import pe.todotic.mitiendaapi_s3.repository.GrupoRepository;
-import pe.todotic.mitiendaapi_s3.repository.PacienteRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import pe.todotic.mitiendaapi_s3.model.ItemVenta;
+import pe.todotic.mitiendaapi_s3.model.Libro;
+import pe.todotic.mitiendaapi_s3.model.Venta;
+import pe.todotic.mitiendaapi_s3.repository.LibroRepository;
+import pe.todotic.mitiendaapi_s3.repository.VentaRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class GrupoService {
-
-
-    @Autowired
-    private PacienteRepository pacienteRepository;
+public class VentaService {
 
     @Autowired
-    private GrupoRepository grupoRepository;
+    private LibroRepository libroRepository;
+
+    @Autowired
+    private VentaRepository ventaRepository;
 
     @Autowired
     private PayPalHttpClient payPalHttpClient;
 
-
-    public String crearGrupoPayPal(List<Integer> idPacientes, String urlRetorno) throws IOException {
-
-        //crear la venta
-        Grupo grupo = new Grupo();
-        List<ItemGrupo> items = new ArrayList<>();
+    public String crearVentaPayPal(List<Integer> idLibros, String urlRetorno) throws IOException {
+        // crear la venta
+        Venta venta = new Venta();
+        List<ItemVenta> items = new ArrayList<>();
         float total = 0;
 
-
-        for (int idPaciente : idPacientes) {
-            Paciente paciente = pacienteRepository
-                    .findById(idPaciente)
+        for (int idLibro : idLibros) {
+            Libro libro = libroRepository
+                    .findById(idLibro)
                     .orElseThrow(EntityNotFoundException::new);
 
-            ItemGrupo itemGrupo = new ItemGrupo();
-            itemGrupo.setPaciente(paciente);
-            itemGrupo.setPrecio(paciente.getPrecio());
-            itemGrupo.setNumDescDisp(3);
-            itemGrupo.setGrupo(grupo);
+            ItemVenta itemVenta = new ItemVenta();
+            itemVenta.setLibro(libro);
+            itemVenta.setPrecio(libro.getPrecio());
+            itemVenta.setNumeroDescargasDisponibles(3);
+            itemVenta.setVenta(venta);
 
-            items.add(itemGrupo);
-            total += itemGrupo.getPrecio();
-
+            items.add(itemVenta);
+            total += itemVenta.getPrecio();
         }
+        venta.setEstado(Venta.Estado.CREADO);
+        venta.setFecha(LocalDateTime.now());
+        venta.setTotal(total);
+        venta.setItems(items);
 
-        grupo.setFase(Grupo.Fase.CREADO);
-        grupo.setFecha(LocalDateTime.now());
-        grupo.setTotal(total);
-        grupo.setItems(items);
+        ventaRepository.save(venta);
 
-        grupoRepository.save(grupo);
+        //=========================> crear una solicitud de pago a la api de paypal
 
-
-        //-------------------------------------------solicitud de pago a la api paypal-------------------------------------------
-
-        //--------------------Datos Generales
+        // establecemos los datos generales
         ApplicationContext applicationContext = new ApplicationContext();
-        applicationContext.brandName("Mi tienda Online");
+        applicationContext.brandName("Mi Tienda Online");
         applicationContext.returnUrl(urlRetorno);
         applicationContext.cancelUrl(urlRetorno);
 
-        //-----------------------crear solicitud del pedido---------------
+        // crear la solicitud del pedido
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.checkoutPaymentIntent("CAPTURE");
         orderRequest.applicationContext(applicationContext);
 
-        //----------------------crera los detalles del pedido (opcional)------------
-
+        // crear los detalles del pedido (opcional)
         List<Item> paypalItems = new ArrayList<>();
 
-        grupo.getItems().forEach(itemGrupo -> {
+        venta.getItems().forEach(itemVenta -> {
             Money money = new Money()
                     .currencyCode("USD")
-                    .value(itemGrupo.getPrecio().toString());
+                    .value(itemVenta.getPrecio().toString());
 
             Item paypalItem = new Item()
-                    .name(itemGrupo.getPaciente().getNombre())
+                    .name(itemVenta.getLibro().getTitulo())
                     .quantity("1")
                     .unitAmount(money);
 
             paypalItems.add(paypalItem);
-
         });
 
-
-        //--------------------crear el resumen de items
+        // crear el resumen de items
         List<PurchaseUnitRequest> purchaseUnitRequests = new ArrayList<>();
 
-
-        //--------------establecer el monto total de la venta-------------------
+        // establecer el monto total de la venta
         AmountWithBreakdown amountWithBreakdown = new AmountWithBreakdown()
                 .currencyCode("USD")
-                .value(grupo.getTotal().toString());
+                .value(venta.getTotal().toString());
 
         AmountBreakdown amountBreakdown = new AmountBreakdown()
                 .itemTotal(
                         new Money()
                                 .currencyCode("USD")
-                                .value(grupo.getTotal().toString())
+                                .value(venta.getTotal().toString())
                 );
 
         amountWithBreakdown.amountBreakdown(amountBreakdown);
@@ -119,18 +107,19 @@ public class GrupoService {
         PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest()
                 .amountWithBreakdown(amountWithBreakdown)
                 .items(paypalItems)
-                .description("Grupo #" + grupo.getId())
-                .referenceId(grupo.getId().toString());
+                .description("Venta #" + venta.getId())
+                .referenceId(venta.getId().toString());
 
         purchaseUnitRequests.add(purchaseUnitRequest);
         orderRequest.purchaseUnits(purchaseUnitRequests);
 
-        //------------crear la solicitud http---------------------------
+        // crear la solicitud http
         OrdersCreateRequest request = new OrdersCreateRequest()
                 .requestBody(orderRequest);
 
         HttpResponse<Order> response = payPalHttpClient.execute(request);
         Order order = response.result();
+
         return order
                 .links()
                 .stream()
@@ -138,11 +127,9 @@ public class GrupoService {
                 .findFirst()
                 .orElseThrow(RuntimeException::new)
                 .href();
-
-
     }
 
-    public Grupo comprobarPayPal(String token) throws IOException {
+    public Venta comprobarPayPal(String token) throws IOException {
         OrdersCaptureRequest request = new OrdersCaptureRequest(token);
 
         try {
@@ -153,20 +140,19 @@ public class GrupoService {
             boolean success = order.status().equals("COMPLETED");
 
             if (success) {
-                Integer idGrupo = Integer.parseInt(order.purchaseUnits().get(0).referenceId());
+                Integer idVenta = Integer.parseInt(order.purchaseUnits().get(0).referenceId());
 
-                Grupo grupo = grupoRepository
-                        .findById(idGrupo)
+                Venta venta = ventaRepository
+                        .findById(idVenta)
                         .orElseThrow(EntityNotFoundException::new);
 
-                grupo.setFase(Grupo.Fase.COMPLETADO);
-                return grupoRepository.save(grupo);
+                venta.setEstado(Venta.Estado.COMPLETADO);
+                return ventaRepository.save(venta);
             }
             return null;
         } catch (HttpException exception) {
             return null;
         }
     }
-
 
 }
