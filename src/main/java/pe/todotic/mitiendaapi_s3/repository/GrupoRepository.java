@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface GrupoRepository extends JpaRepository<Grupo, Integer> {
 
-    Optional<Grupo> findByIdAndFase(Integer id, Grupo.Fase fase);
+    Optional<Grupo> findByIdGrupoAndFase(Integer idGrupo, Grupo.Fase fase);
 
 
 }

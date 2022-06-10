@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ResultadoPagoPayPal {
-    private boolean succes;
+    private boolean success;
     private Integer idGrupo;
 }

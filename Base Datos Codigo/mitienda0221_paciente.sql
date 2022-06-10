@@ -33,6 +33,8 @@ CREATE TABLE `paciente` (
   `num_exp` varchar(45) NOT NULL,
   `ruta_portada` varchar(45) DEFAULT NULL,
   `descripcion` varchar(250) DEFAULT NULL,
+  `precio` float unsigned NOT NULL,
+  `tutor` varchar(45) NOT NULL,
   PRIMARY KEY (`id_paciente`)
 ) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -43,7 +45,7 @@ CREATE TABLE `paciente` (
 
 LOCK TABLES `paciente` WRITE;
 /*!40000 ALTER TABLE `paciente` DISABLE KEYS */;
-INSERT INTO `paciente` VALUES (1,'Paquito','elqueme','pateaba','5536987762','2014-03-22',NULL,'0123125','3542800f-fd4b-4059-9d59-d8c698b32c6a.png','Entonces me di cuenta que era Paquito el que me pateaba'),(61,'Ismael Wenceslao','Barragan','Hernandez','5532264489','2016-12-12','subsecuente','550123454','3542800f-fd4b-4059-9d59-d8c698b32c6a.png','Esta chavo el chavo'),(63,'Montserrat','Flores','Merlo','5564987554','2015-09-05','egreso','55987455','1b3c78a6-0fe2-4cf2-9446-b1d5e9c2633c.png','Me siento inquietin me tomo mi ritalin');
+INSERT INTO `paciente` VALUES (1,'Paquito','elqueme','pateaba','5536987762','2014-03-22','primervez','0123125','3542800f-fd4b-4059-9d59-d8c698b32c6a.png','Entonces me di cuenta que era Paquito el que me pateaba',10.5,'Don Francisco'),(61,'Ismael Wenceslao','Barragan','Hernandez','5532264489','2016-12-12','subsecuente','550123454','3542800f-fd4b-4059-9d59-d8c698b32c6a.png','Esta chavo el chavo',20,'Don May'),(63,'Montserrat','Flores','Merlo','5564987554','2015-09-05','egreso','55987455','1b3c78a6-0fe2-4cf2-9446-b1d5e9c2633c.png','Me siento inquietin me tomo mi ritalin',30,'Alejandra Lili');
 /*!40000 ALTER TABLE `paciente` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-23 15:34:35
+-- Dump completed on 2022-06-09 16:31:52

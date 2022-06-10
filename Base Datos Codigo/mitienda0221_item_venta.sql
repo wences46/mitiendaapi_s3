@@ -33,7 +33,7 @@ CREATE TABLE `item_venta` (
   KEY `fk_itemventa_libro_idx` (`idlibro`),
   CONSTRAINT `fk_item_venta` FOREIGN KEY (`idventa`) REFERENCES `venta` (`idventa`),
   CONSTRAINT `fk_itemventa_libro` FOREIGN KEY (`idlibro`) REFERENCES `libro` (`idlibro`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,6 +42,7 @@ CREATE TABLE `item_venta` (
 
 LOCK TABLES `item_venta` WRITE;
 /*!40000 ALTER TABLE `item_venta` DISABLE KEYS */;
+INSERT INTO `item_venta` VALUES (100,80,129,56,3),(101,80,129,57,3),(102,79,159,58,3),(103,79,159,59,3),(104,79,159,60,3),(105,79,159,61,3),(106,79,159,62,3);
 /*!40000 ALTER TABLE `item_venta` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-23 15:34:35
+-- Dump completed on 2022-06-09 16:31:52

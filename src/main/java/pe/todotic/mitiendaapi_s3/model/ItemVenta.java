@@ -1,5 +1,6 @@
 package pe.todotic.mitiendaapi_s3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,6 +22,8 @@ public class ItemVenta {
     @JoinColumn(name = "idlibro", referencedColumnName = "idlibro")
     private Libro libro;
 
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "idventa", referencedColumnName = "idventa")
     private Venta venta;

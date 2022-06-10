@@ -68,52 +68,29 @@ public class HomeController {
     @PostMapping("/pago-paypal/comprobar")
     ResultadoPagoPayPal  comprobarPagoPayPal(@RequestParam String token) throws  IOException{
         Grupo grupo = grupoService.comprobarPayPal(token);
-        boolean succes = false;
+        boolean success = false;
 
         ResultadoPagoPayPal resultadoPagoPayPal = new ResultadoPagoPayPal();
 
         if(grupo != null ){
-            succes = true;
-            resultadoPagoPayPal.setIdGrupo(grupo.getId());
+            success = true;
+            resultadoPagoPayPal.setIdGrupo(grupo.getIdGrupo());
         }
-        resultadoPagoPayPal.setSucces(succes);
+        resultadoPagoPayPal.setSuccess(success);
 
         return resultadoPagoPayPal;
 
     }
 
-    @GetMapping("/detalles-venta/{idVenta}")
+    @GetMapping("/detalles-grupo/{idGrupo}")
     Grupo getGrupo(@PathVariable Integer idGrupo) {
         return grupoRepository
-                .findByIdAndFase(idGrupo, Grupo.Fase.COMPLETADO)
+                .findByIdGrupoAndFase(idGrupo, Grupo.Fase.COMPLETADO)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
 
     //---------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -119,8 +119,8 @@ public class GrupoService {
         PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest()
                 .amountWithBreakdown(amountWithBreakdown)
                 .items(paypalItems)
-                .description("Grupo #" + grupo.getId())
-                .referenceId(grupo.getId().toString());
+                .description("Grupo #" + grupo.getIdGrupo())
+                .referenceId(grupo.getIdGrupo().toString());
 
         purchaseUnitRequests.add(purchaseUnitRequest);
         orderRequest.purchaseUnits(purchaseUnitRequests);
