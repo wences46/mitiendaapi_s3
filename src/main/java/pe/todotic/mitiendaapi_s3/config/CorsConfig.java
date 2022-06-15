@@ -21,6 +21,12 @@ public class CorsConfig {
                         .allowedOrigins("*")
                         .allowedMethods("*");
 
+                registry
+                        .addMapping("/login")
+                        .allowedOrigins("*")
+                        .allowedMethods("*")
+                        .exposedHeaders("*");
+
 
             }
         };
