@@ -119,8 +119,8 @@ public class GrupoService {
         PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest()
                 .amountWithBreakdown(amountWithBreakdown)
                 .items(paypalItems)
-                .description("Grupo #" + grupo.getIdGrupo())
-                .referenceId(grupo.getIdGrupo().toString());
+                .description("Grupo #" + grupo.getId())
+                .referenceId(grupo.getId().toString());
 
         purchaseUnitRequests.add(purchaseUnitRequest);
         orderRequest.purchaseUnits(purchaseUnitRequests);
@@ -153,10 +153,10 @@ public class GrupoService {
             boolean success = order.status().equals("COMPLETED");
 
             if (success) {
-                Integer idGrupo = Integer.parseInt(order.purchaseUnits().get(0).referenceId());
+                Integer id = Integer.parseInt(order.purchaseUnits().get(0).referenceId());
 
                 Grupo grupo = grupoRepository
-                        .findById(idGrupo)
+                        .findById(id)
                         .orElseThrow(EntityNotFoundException::new);
 
                 grupo.setFase(Grupo.Fase.COMPLETADO);

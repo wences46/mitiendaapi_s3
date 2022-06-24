@@ -11,9 +11,9 @@ import java.util.Date;
 @Entity
 public class Paciente {
     @Id
-    @Column(name = "id_paciente")
+    @Column(name = "idpaciente")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPaciente;
+    private Integer id;
 
     private String nombre;
     private String apePat;

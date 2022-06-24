@@ -74,7 +74,7 @@ public class HomeController {
 
         if(grupo != null ){
             success = true;
-            resultadoPagoPayPal.setIdGrupo(grupo.getIdGrupo());
+            resultadoPagoPayPal.setIdGrupo(grupo.getId());
         }
         resultadoPagoPayPal.setSuccess(success);
 
@@ -85,7 +85,7 @@ public class HomeController {
     @GetMapping("/detalles-grupo/{idGrupo}")
     Grupo getGrupo(@PathVariable Integer idGrupo) {
         return grupoRepository
-                .findByIdGrupoAndFase(idGrupo, Grupo.Fase.COMPLETADO)
+                .findByIdAndFase(idGrupo, Grupo.Fase.COMPLETADO)
                 .orElseThrow(EntityNotFoundException::new);
     }
 

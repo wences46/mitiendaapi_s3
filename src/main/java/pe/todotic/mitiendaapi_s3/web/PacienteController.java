@@ -9,12 +9,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pe.todotic.mitiendaapi_s3.model.Grupo;
 import pe.todotic.mitiendaapi_s3.model.Paciente;
-import pe.todotic.mitiendaapi_s3.model.Venta;
-import pe.todotic.mitiendaapi_s3.repository.GrupoRepository;
 import pe.todotic.mitiendaapi_s3.repository.PacienteRepository;
-import pe.todotic.mitiendaapi_s3.repository.VentaRepository;
 import pe.todotic.mitiendaapi_s3.web.dto.PacienteDTO;
 
 
@@ -22,7 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/paciente")
+@RequestMapping("/api/admin/pacientes")
 public class PacienteController {
 
     @Autowired
@@ -84,29 +80,6 @@ public class PacienteController {
             @PageableDefault(size = 5, sort = "numExp" , direction = Sort.Direction.ASC) Pageable pageable
     ) {
         return pacienteRepository.findAll(pageable);
-    }
-
-
-    @Autowired
-    GrupoRepository grupoRepository;
-
-    @Autowired
-    VentaRepository ventaRepository;
-
-    @GetMapping("/listacion")
-    List<Venta> listacion() {
-        return ventaRepository.findAll();
-    }
-
-    @GetMapping("/listacionagria")
-    List<Grupo> listacionagria() {
-        return grupoRepository.findAll();
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/crearg")
-    Grupo crearg(@Validated @RequestBody Grupo grupo) {
-        return grupoRepository.save(grupo);
     }
 
 

@@ -12,10 +12,16 @@ public class ItemGrupo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "iditem_grupo")
-    private Integer idItemGrupo;
+    private Integer id;
+
+    @Column(name = "precio")
+    private Float precio;
+
+    @Column(name = "num_desc_disp")
+    private  Integer numDescDisp;
 
     @ManyToOne
-    @JoinColumn(name = "idPaciente", referencedColumnName = "id_paciente")
+    @JoinColumn(name = "idpaciente", referencedColumnName = "idpaciente")
     private Paciente paciente;
 
     @JsonIgnore
@@ -23,11 +29,8 @@ public class ItemGrupo {
     @JoinColumn(name = "idgrupo", referencedColumnName = "idgrupo")
     private Grupo grupo;
 
-    @Column(name = "num_desc_disp")
-    private  Integer numDescDisp;
 
-    @Column(name = "precio")
-    private Float precio;
+
 
 
 }

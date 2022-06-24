@@ -12,7 +12,7 @@ public class Grupo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idgrupo")
-    private Integer idGrupo;
+    private Integer id;
 
     private LocalDateTime fecha;
 
